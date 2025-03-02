@@ -1,4 +1,4 @@
-# gatherings-server MCP Server
+# gatherings MCP Server
 
 A Model Context Protocol server for managing gatherings and expense sharing.
 
