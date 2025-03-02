@@ -4,6 +4,20 @@ A Model Context Protocol server for managing gatherings and expense sharing.
 
 This is a TypeScript-based MCP server that helps track expenses and payments for social events, making it easy to calculate reimbursements and settle balances between friends.
 
+## Architecture Note
+
+**Important**: This project uses a non-standard architecture for a Node.js application. The TypeScript MCP server acts as a wrapper around a Python backend implementation. The Node.js server receives MCP requests, translates them to command-line calls to the Python script, and returns the results.
+
+While this architecture works for our current needs, it's not the most efficient or maintainable approach for a production application.
+
+### TODO
+- Refactor the implementation to use a more standard architecture:
+  - Either fully migrate the backend to TypeScript/JavaScript
+  - Or implement proper inter-process communication between Node.js and Python components
+  - Or replace with a REST API approach where the Python backend provides an API that the MCP server consumes
+- Improve error handling between the Node.js and Python components
+- Add automated tests for the integration between components
+
 ## Features
 
 ### Tools
