@@ -2,6 +2,7 @@
   "name": "gatherings-server",
   "version": "0.1.0",
   "description": "A Model Context Protocol server for keeping track of expenses in friends gatherings",
+  "license": "Apache-2.0",
   "private": true,
   "type": "module",
   "bin": {
