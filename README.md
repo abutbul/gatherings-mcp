@@ -17,6 +17,7 @@ While this architecture works for our current needs, it's not the most efficient
   - Or replace with a REST API approach where the Python backend provides an API that the MCP server consumes
 - Improve error handling between the Node.js and Python components
 - Add automated tests for the integration between components
+- Optimise Dockerfile 
 
 ## Features
 
