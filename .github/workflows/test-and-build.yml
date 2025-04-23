@@ -1,0 +1,88 @@
+name: Test and Build MCP Server
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Set up Python environment
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    # Install Python dependencies
+    - name: Install Python dependencies
+      run: |
+        python3 -m venv venv
+        source venv/bin/activate
+        pip install --upgrade pip
+        pip install -r requirements.txt
+
+    # Run Python tests
+    - name: Run Python tests
+      run: |
+        source venv/bin/activate
+        python3 test_example.py > test_results.log 2>&1
+      continue-on-error: false
+
+    # Upload test logs as artifacts
+    - name: Upload test logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-logs
+        path: test_results.log
+        retention-days: 7
+
+    # Set up Node.js environment
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    # Install Node.js dependencies and build the MCP server
+    - name: Build MCP server
+      run: |
+        npm install
+        npm run build
+
+    # Build Docker image
+    - name: Build Docker image
+      run: |
+        docker build -t gatherings-mcp:latest .
+      
+    # Test Docker image
+    - name: Test Docker image
+      run: |
+        # Export information about the built image
+        docker inspect gatherings-mcp:latest > docker-image-info.json
+        # Test that the image runs
+        if docker run --rm gatherings-mcp:latest --version; then
+            echo "Version command succeeded"
+        else
+            echo "Error: Version command failed" >&2
+            exit 1
+        fi
+        echo "Docker build successful" > docker-build-result.log
+
+    # Upload build artifacts
+    - name: Upload build artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: |
+          docker-image-info.json
+          docker-build-result.log
+        retention-days: 5
