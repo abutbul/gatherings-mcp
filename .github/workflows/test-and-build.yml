@@ -68,7 +68,12 @@ jobs:
         # Export information about the built image
         docker inspect gatherings-mcp:latest > docker-image-info.json
         # Test that the image runs
-        docker run --rm gatherings-mcp:latest --version || echo "Version command failed, but image runs"
+        if docker run --rm gatherings-mcp:latest --version; then
+            echo "Version command succeeded"
+        else
+            echo "Error: Version command failed" >&2
+            exit 1
+        fi
         echo "Docker build successful" > docker-build-result.log
 
     # Upload build artifacts
