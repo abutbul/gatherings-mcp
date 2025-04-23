@@ -1,0 +1,70 @@
+name: Test and Build MCP Server
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Set up Python environment
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    # Install Python dependencies
+    - name: Install Python dependencies
+      run: |
+        python3 -m venv venv
+        source venv/bin/activate
+        pip install --upgrade pip
+        pip install -r requirements.txt
+
+    # Run Python tests
+    - name: Run Python tests
+      run: |
+        source venv/bin/activate
+        python3 test_example.py
+      continue-on-error: false
+
+    # Upload test logs as artifacts
+    - name: Upload test logs
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-logs
+        path: test_example.py
+
+    # Set up Node.js environment
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    # Install Node.js dependencies and build the MCP server
+    - name: Build MCP server
+      run: |
+        npm install
+        npm run build
+
+    # Build Docker image
+    - name: Build Docker image
+      run: |
+        docker build -t gatherings-mcp .
+
+    # Save Docker image as artifact
+    - name: Save Docker image
+      uses: actions/upload-artifact@v3
+      with:
+        name: docker-image
+        path: |
+          $(docker save gatherings-mcp | gzip > gatherings-mcp.tar.gz)
