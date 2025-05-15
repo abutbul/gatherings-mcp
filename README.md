@@ -1,4 +1,5 @@
 # gatherings MCP Server
+[![smithery badge](https://smithery.ai/badge/@abutbul/gatherings-mcp)](https://smithery.ai/server/@abutbul/gatherings-mcp)
 
 A Model Context Protocol server for managing gatherings and expense sharing.
 
@@ -62,6 +63,14 @@ npm run watch
 ```
 
 ## Installation
+
+### Installing via Smithery
+
+To install Gatherings Expense Manager for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@abutbul/gatherings-mcp):
+
+```bash
+npx -y @smithery/cli install @abutbul/gatherings-mcp --client claude
+```
 
 ### Configuration
 
