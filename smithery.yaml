@@ -1,0 +1,26 @@
+# Smithery configuration file: https://smithery.ai/docs/build/project-config
+
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required:
+      - gatheringsDbPath
+      - gatheringsScript
+    properties:
+      gatheringsDbPath:
+        type: string
+        default: /data/gatherings.db
+        description: Path to the SQLite database file
+      gatheringsScript:
+        type: string
+        default: /app/gatherings.py
+        description: Path to the Python script handling gathering operations
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({ command: 'node', args: ['build/index.js'], env: { GATHERINGS_DB_PATH: config.gatheringsDbPath, GATHERINGS_SCRIPT: config.gatheringsScript } })
+  exampleConfig:
+    gatheringsDbPath: /data/gatherings.db
+    gatheringsScript: /app/gatherings.py
